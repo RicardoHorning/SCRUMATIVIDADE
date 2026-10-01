@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oficina Prática: Scrum Logístico Ágil</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .step-transition { transition: all 0.3s ease-in-out; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 h-full flex flex-col justify-between">
+
+    <header class="bg-slate-900 text-white shadow-md py-4 px-6">
+        <div class="max-w-4xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-2">
+            <div class="flex items-center space-x-3">
+                <span class="bg-brand-600 text-white p-2 rounded-xl text-lg font-bold">📦</span>
+                <div>
+                    <h1 class="text-lg font-bold">Scrum Logístico na Prática</h1>
+                    <p class="text-xs text-slate-400">Metodologia Ágil aplicada passo a passo para equipes</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-3">
+                <div class="bg-slate-800 px-4 py-2 rounded-lg border border-slate-700 flex items-center gap-2">
+                    <span class="text-xs text-slate-400">Pontuação:</span>
+                    <span id="score-display" class="font-bold text-brand-400 text-lg">0</span>
+                    <span class="text-xs text-slate-400">pts</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-4xl w-full mx-auto p-4 sm:p-6 flex-grow flex flex-col">
+        
+        <div class="mb-6">
+            <div class="flex justify-between text-xs font-semibold text-slate-500 mb-1">
+                <span id="step-indicator-text">Passo 1 de 4</span>
+                <span id="step-progress-percent">25% Concluído</span>
+            </div>
+            <div class="w-full bg-slate-200 h-2.5 rounded-full overflow-hidden">
+                <div id="progress-bar" class="bg-brand-600 h-2.5 rounded-full w-1/4 transition-all duration-300"></div>
+            </div>
+        </div>
+
+        <!-- Notification Banner -->
+        <div id="alert-box" class="hidden mb-4 p-4 rounded-xl bg-amber-50 border border-amber-200 text-amber-800 text-sm flex items-start gap-3">
+            <span class="text-lg">⚠️</span>
+            <div id="alert-message">Por favor, preencha os campos obrigatórios antes de continuar.</div>
+        </div>
+
+        <!-- Card Wrapper -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 flex-grow flex flex-col overflow-hidden step-transition">
+            
+            <!-- STEP 1: Equipe, Empresa e Problema -->
+            <section id="step-1" class="step-content p-6 sm:p-8 flex flex-col gap-6">
+                <div>
+                    <span class="inline-block bg-brand-50 text-brand-700 text-xs font-semibold px-3 py-1 rounded-full mb-2">Passo 1 de 4</span>
+                    <h2 class="text-xl sm:text-2xl font-bold text-slate-900">Reúna a equipe e defina o problema logístico</h2>
+                    <p class="text-slate-600 text-sm mt-1">Primeiro, insiram os nomes dos 3 integrantes do seu grupo. Depois, escolham uma empresa e um problema real para resolvermos.</p>
+                </div>
+
+                <!-- Integrantes -->
+                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-3">
+                    <h3 class="text-sm font-bold text-slate-800">👥 Integrantes da Equipe (Obrigatório para nota)</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                        <input type="text" id="aluno1" class="p-3 bg-white border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none" placeholder="Nome do Aluno 1">
+                        <input type="text" id="aluno2" class="p-3 bg-white border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none" placeholder="Nome do Aluno 2">
+                        <input type="text" id="aluno3" class="p-3 bg-white border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none" placeholder="Nome do Aluno 3">
+                    </div>
+                </div>
+
+                <!-- Empresa e Setor -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Nome da Empresa ou Contexto *</label>
+                        <input type="text" id="empresa" class="w-full p-3 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none" placeholder="Ex: Centro de Distribuição Alfa">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Setor Envolvido *</label>
+                        <input type="text" id="setor" class="w-full p-3 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none" placeholder="Ex: Expedição / Estoque">
+                    </div>
+                </div>
+
+                <!-- Problema e Objetivo -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Qual é o problema logístico? *</label>
+                        <textarea id="problema" rows="3" class="w-full p-3 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none" placeholder="Ex: Produtos demoram muito para serem localizados nas prateleiras."></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Qual é o objetivo do projeto? *</label>
+                        <textarea id="objetivo" rows="3" class="w-full p-3 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none" placeholder="Ex: Reduzir o tempo de localização de mercadorias na Área A."></textarea>
+                    </div>
+                </div>
+
+                <!-- Dica / Erros a evitar -->
+                <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 text-xs text-amber-900 space-y-1">
+                    <p class="font-bold text-amber-800">⚠️ Atenção aos erros comuns:</p>
+                    <p>❌ Não digite respostas genéricas ou fictícias como <em>"xx"</em>, <em>"teste"</em> ou frases incompletas.</p>
+                    <p>✅ Seja direto: defina claramente o que acontece e o que vocês querem alcançar.</p>
+                </div>
+            </section>
+
+            <!-- STEP 2: Product Backlog e Meta da Sprint -->
+            <section id="step-2" class="step-content p-6 sm:p-8 flex flex-col gap-6 hidden">
+                <div>
+                    <span class="inline-block bg-brand-50 text-brand-700 text-xs font-semibold px-3 py-1 rounded-full mb-2">Passo 2 de 4</span>
+                    <h2 class="text-xl sm:text-2xl font-bold text-slate-900">O que é Backlog e a Escolha da Sprint</h2>
+                    <p class="text-slate-600 text-sm mt-1">Conheça o conceito fundamental do Scrum para organizar o trabalho da equipe.</p>
+                </div>
+
+                <!-- Caixa Explicativa do Backlog -->
+                <div class="bg-blue-50 border border-blue-200 rounded-2xl p-5 space-y-3">
+                    <div class="flex items-center gap-2 text-blue-900 font-bold text-sm">
+                        <span class="text-lg">💡</span>
+                        <span>O que é um Product Backlog? (Conceito Simples)</span>
+                    </div>
+                    <p class="text-xs sm:text-sm text-blue-800 leading-relaxed">
+                        O <strong>Product Backlog</strong> nada mais é do que uma <strong>lista organizada com tudo o que precisa ser feito</strong> para o projeto acontecer. Em vez de tentar fazer tudo ao mesmo tempo, a equipe lista todas as tarefas e escolhe quais serão feitas primeiro.
+                    </p>
+                    <div class="bg-white/80 p-3 rounded-xl border border-blue-100 text-xs text-slate-700 space-y-1">
+                        <p class="font-semibold text-slate-900">📦 Exemplo Prático de Backlog para Organizar um Estoque:</p>
+                        <p>1. Levantar produtos sem código nas prateleiras.</p>
+                        <p>2. Conferir endereços divergentes no sistema.</p>
+                        <p>3. Corrigir a identificação visual da Área A.</p>
+                        <p>4. Testar a nova organização com a equipe de separação.</p>
+                    </div>
+                </div>
+
+                <!-- Campos para o Aluno preencher o Backlog e a Sprint -->
+                <div class="space-y-4 pt-2">
+                    <h3 class="text-sm font-bold text-slate-800">Agora é com o seu grupo: Defina 3 itens principais e a Meta da Sprint</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                        <div>
+                            <label class="block text-xs font-medium text-slate-700 mb-1">Item 1 do Backlog *</label>
+                            <input type="text" id="item1" class="w-full p-3 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none" placeholder="Ex: Mapear posições da Área A">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-slate-700 mb-1">Item 2 do Backlog *</label>
+                            <input type="text" id="item2" class="w-full p-3 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none" placeholder="Ex: Identificar produtos sem código">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-slate-700 mb-1">Item 3 do Backlog *</label>
+                            <input type="text" id="item3" class="w-full p-3 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none" placeholder="Ex: Testar nova sinalização visual">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Meta da Sprint (O que vão conseguir entregar agora?) *</label>
+                        <input type="text" id="meta-sprint" class="w-full p-3 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none" placeholder="Ex: Organizar e sinalizar 100% dos corredores da Área A em 1 semana.">
+                    </div>
+                </div>
+            </section>
+
+            <!-- STEP 3: Papéis da Equipe e Tarefas -->
+            <section id="step-3" class="step-content p-6 sm:p-8 flex flex-col gap-6 hidden">
+                <div>
+                    <span class="inline-block bg-brand-50 text-brand-700 text-xs font-semibold px-3 py-1 rounded-full mb-2">Passo 3 de 4</span>
+                    <h2 class="text-xl sm:text-2xl font-bold text-slate-900">Papéis da Equipe e Divisão de Tarefas</h2>
+                    <p class="text-slate-600 text-sm mt-1">No Scrum, cada um tem um papel claro para que o projeto flua sem confusão.</p>
+                </div>
+
+                <!-- Explicação dos Papéis -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                        <span class="text-xs font-bold text-brand-600 uppercase">Product Owner (PO)</span>
+                        <p class="text-xs text-slate-600 mt-1 mb-2">Quem ajuda a definir as prioridades do projeto.</p>
+                        <select id="papel-po" class="w-full p-2.5 bg-white border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                            <option value="">Selecione...</option>
+                        </select>
+                    </div>
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                        <span class="text-xs font-bold text-brand-600 uppercase">Scrum Master (SM)</span>
+                        <p class="text-xs text-slate-600 mt-1 mb-2">Quem ajuda a organizar o fluxo e remove barreiras.</p>
+                        <select id="papel-sm" class="w-full p-2.5 bg-white border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                            <option value="">Selecione...</option>
+                        </select>
+                    </div>
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                        <span class="text-xs font-bold text-brand-600 uppercase">Developers (Devs)</span>
+                        <p class="text-xs text-slate-600 mt-1 mb-2">Quem realiza as atividades na prática.</p>
+                        <select id="papel-devs" class="w-full p-2.5 bg-white border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                            <option value="">Selecione...</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Sprint Backlog / Tarefas -->
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Como dividiram as tarefas (Sprint Backlog)? *</label>
+                    <textarea id="tarefas-detalhes" rows="3" class="w-full p-3 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none" placeholder="Ex: Aluno 1 levanta endereços, Aluno 2 confere no sistema e Aluno 3 corrige a identificação."></textarea>
+                </div>
+            </section>
+
+            <!-- STEP 4: Fechamento Ágil e Retrospectiva -->
+            <section id="step-4" class="step-content p-6 sm:p-8 flex flex-col gap-6 hidden">
+                <div>
+                    <span class="inline-block bg-brand-50 text-brand-700 text-xs font-semibold px-3 py-1 rounded-full mb-2">Passo 4 de 4</span>
+                    <h2 class="text-xl sm:text-2xl font-bold text-slate-900">Fechamento Ágil: Review e Retrospectiva</h2>
+                    <p class="text-slate-600 text-sm mt-1">Imagine que a Sprint chegou ao fim. Responda às perguntas finais da equipe para avaliarmos o aprendizado.</p>
+                </div>
+
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">1. Review (O que foi entregue ou melhorado nesta etapa?) *</label>
+                        <input type="text" id="review-resp" class="w-full p-3 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none" placeholder="Ex: Mapeamos e corrigimos 100% das posições da Área A.">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">2. Retrospective - Ponto Positivo (O que funcionou muito bem?) *</label>
+                        <input type="text" id="retro-pos" class="w-full p-3 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none" placeholder="Ex: A divisão clara de tarefas evitou retrabalho.">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">3. Retrospective - Ponto de Melhoria (O que faríamos diferente na próxima?) *</label>
+                        <input type="text" id="retro-melhoria" class="w-full p-3 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none" placeholder="Ex: Precisamos de acesso mais rápido ao sistema de estoque.">
+                    </div>
+                </div>
+
+                <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-4 flex items-center justify-between">
+                    <div>
+                        <h4 class="font-bold text-emerald-900 text-sm">Tudo pronto, equipe! 🎉</h4>
+                        <p class="text-xs text-emerald-700">Clique abaixo para gerar o relatório oficial com nota para o professor.</p>
+                    </div>
+                    <button onclick="gerarRelatorio()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-4 py-2.5 rounded-xl text-sm transition-all shadow-sm">
+                        Gerar Relatório Final
+                    </button>
+                </div>
+            </section>
+
+            <!-- STEP 5: Relatório Final -->
+            <section id="step-report" class="step-content p-6 sm:p-8 flex flex-col gap-6 hidden">
+                <!-- Cabeçalho do Relatório com NOTA ao lado dos BOTOES no TOPO -->
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-slate-200 pb-4">
+                    <div>
+                        <span class="inline-block bg-emerald-100 text-emerald-800 text-xs font-semibold px-3 py-1 rounded-full mb-1">Relatório Concluído</span>
+                        <h2 class="text-xl sm:text-2xl font-bold text-slate-900">Resumo Oficial para Nota</h2>
+                        <p class="text-slate-600 text-xs mt-1">Este documento contém todas as respostas do grupo e a pontuação alcançada.</p>
+                    </div>
+
+                    <!-- Bloco de Nota + Botões de Ação no Topo -->
+                    <div class="flex flex-wrap items-center gap-3 w-full md:w-auto">
+                        <div class="bg-brand-50 border border-brand-200 px-4 py-2 rounded-xl flex items-center gap-2 shadow-sm">
+                            <span class="text-xs font-semibold text-brand-700">Nota Final:</span>
+                            <span id="final-score-display" class="font-extrabold text-brand-600 text-xl">0 / 100</span>
+                        </div>
+                        <button onclick="copiarRelatorio()" class="flex-1 sm:flex-none bg-brand-600 hover:bg-brand-700 text-white font-medium px-4 py-2.5 rounded-xl text-xs transition-all flex items-center justify-center gap-1.5 shadow-sm">
+                            📋 Copiar Relatório
+                        </button>
+                        <button onclick="window.print()" class="flex-1 sm:flex-none bg-slate-800 hover:bg-slate-900 text-white font-medium px-4 py-2.5 rounded-xl text-xs transition-all flex items-center justify-center gap-1.5">
+                            🖨️ Imprimir / PDF
+                        </button>
+                    </div>
+                </div>
+
+                <div id="report-preview-box" class="bg-slate-50 border border-slate-200 rounded-2xl p-6 text-sm space-y-4 text-slate-700 max-h-[400px] overflow-y-auto">
+                    <!-- Conteúdo preenchido via JavaScript -->
+                </div>
+            </section>
+
+            <!-- Footer Navigation Controls -->
+            <div class="bg-slate-50 px-6 py-4 border-t border-slate-200 flex justify-between items-center mt-auto">
+                <button id="btn-voltar" onclick="mudarPasso(-1)" class="px-4 py-2 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-200 transition-all disabled:opacity-40 disabled:cursor-not-allowed">
+                    ← Voltar
+                </button>
+                <button id="btn-avancar" onclick="mudarPasso(1)" class="bg-brand-600 hover:bg-brand-700 text-white px-6 py-2 rounded-xl text-sm font-medium transition-all shadow-sm">
+                    Avançar →
+                </button>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        let currentStep = 1;
+        const totalSteps = 4;
+        let pontosPorPasso = [0, 0, 0, 0, 0]; // Guarda os pontos válidos de cada passo (0 a 25)
+
+        function calcularNotaTotal() {
+            return pontosPorPasso.reduce((acc, val) => acc + val, 0);
+        }
+
+        function atualizarExibicaoScore() {
+            const total = calcularNotaTotal();
+            document.getElementById('score-display').innerText = total;
+            const finalScoreEl = document.getElementById('final-score-display');
+            if (finalScoreEl) {
+                finalScoreEl.innerText = `${total} / 100`;
+            }
+        }
+
+        function atualizarOpcoesAlunos() {
+            const a1 = document.getElementById('aluno1').value.trim() || 'Aluno 1';
+            const a2 = document.getElementById('aluno2').value.trim() || 'Aluno 2';
+            const a3 = document.getElementById('aluno3').value.trim() || 'Aluno 3';
+
+            const selectPO = document.getElementById('papel-po');
+            const selectSM = document.getElementById('papel-sm');
+            const selectDevs = document.getElementById('papel-devs');
+
+            const valPO = selectPO.value;
+            const valSM = selectSM.value;
+            const valDevs = selectDevs.value;
+
+            const opcoesIndividuais = `
+                <option value="">Selecione...</option>
+                <option value="${a1}">${a1}</option>
+                <option value="${a2}">${a2}</option>
+                <option value="${a3}">${a3}</option>
+            `;
+
+            const opcoesDevs = `
+                <option value="">Selecione...</option>
+                <option value="${a1}">${a1}</option>
+                <option value="${a2}">${a2}</option>
+                <option value="${a3}">${a3}</option>
+                <option value="${a1} e ${a2}">${a1} e ${a2}</option>
+                <option value="${a1} e ${a3}">${a1} e ${a3}</option>
+                <option value="${a2} e ${a3}">${a2} e ${a3}</option>
+                <option value="Todos (${a1}, ${a2} e ${a3})">Todos (${a1}, ${a2} e ${a3})</option>
+            `;
+
+            selectPO.innerHTML = opcoesIndividuais;
+            selectSM.innerHTML = opcoesIndividuais;
+            selectDevs.innerHTML = opcoesDevs;
+
+            if (valPO) selectPO.value = valPO;
+            if (valSM) selectSM.value = valSM;
+            if (valDevs) selectDevs.value = valDevs;
+        }
+
+        function atualizarUI() {
+            document.querySelectorAll('.step-content').forEach(el => el.classList.add('hidden'));
+            
+            if (currentStep <= totalSteps) {
+                document.getElementById(`step-${currentStep}`).classList.remove('hidden');
+                document.getElementById('btn-avancar').style.display = 'inline-block';
+                document.getElementById('btn-voltar').style.display = 'inline-block';
+            } else {
+                document.getElementById('step-report').classList.remove('hidden');
+                document.getElementById('btn-avancar').style.display = 'none';
+                document.getElementById('btn-voltar').style.display = 'none';
+            }
+
+            if (currentStep === 3) {
+                atualizarOpcoesAlunos();
+            }
+
+            document.getElementById('btn-voltar').disabled = (currentStep === 1 || currentStep > totalSteps);
+
+            let percent = Math.min((currentStep / totalSteps) * 100, 100);
+            document.getElementById('progress-bar').style.width = percent + '%';
+            document.getElementById('step-indicator-text').innerText = currentStep <= totalSteps ? `Passo ${currentStep} de ${totalSteps}` : 'Relatório Final';
+            document.getElementById('step-progress-percent').innerText = `${Math.round(percent)}% Concluído`;
+
+            atualizarExibicaoScore();
+            ocultarAlerta();
+        }
+
+        function mostrarAlerta(msg) {
+            const box = document.getElementById('alert-box');
+            document.getElementById('alert-message').innerText = msg;
+            box.classList.remove('hidden');
+        }
+
+        function ocultarAlerta() {
+            document.getElementById('alert-box').classList.add('hidden');
+        }
+
+        // Analisador avançado de qualidade de texto
+        function validarTexto(texto, minChars, nomeCampo) {
+            const t = texto.trim();
+            if (!t) {
+                return { valido: false, msg: `Por favor, preencha o campo '${nomeCampo}'.` };
+            }
+            if (t.length < minChars) {
+                return { valido: false, msg: `O campo '${nomeCampo}' precisa ter no mínimo ${minChars} caracteres. Elabore melhor a sua resposta.` };
+            }
+            // Bloqueio de respostas genéricas, repetitivas ou fictícias (ex: "xx", "xxx", "teste", "aaa")
+            const padraoRepetido = /^(.)\1+$/i;
+            const termosGenericos = ['xx', 'xxx', 'xxxx', 'xxxxx', 'teste', 'test', 'asdf', '123', 'abc', 'nao sei', 'não sei', 'nenhum'];
+            if (padraoRepetido.test(t) || termosGenericos.includes(t.toLowerCase())) {
+                return { valido: false, msg: `O campo '${nomeCampo}' contém um texto genérico ou inválido ("${t}"). Por favor, insira uma resposta explicativa e coerente.` };
+            }
+            return { valido: true };
+        }
+
+        function validarPassoAtual() {
+            if (currentStep === 1) {
+                const v1 = validarTexto(document.getElementById('aluno1').value, 2, 'Aluno 1');
+                if (!v1.valido) { mostrarAlerta(v1.msg); return false; }
+                const v2 = validarTexto(document.getElementById('aluno2').value, 2, 'Aluno 2');
+                if (!v2.valido) { mostrarAlerta(v2.msg); return false; }
+                const v3 = validarTexto(document.getElementById('aluno3').value, 2, 'Aluno 3');
+                if (!v3.valido) { mostrarAlerta(v3.msg); return false; }
+
+                const vEmp = validarTexto(document.getElementById('empresa').value, 3, 'Empresa / Contexto');
+                if (!vEmp.valido) { mostrarAlerta(vEmp.msg); return false; }
+                const vSet = validarTexto(document.getElementById('setor').value, 3, 'Setor Envolvido');
+                if (!vSet.valido) { mostrarAlerta(vSet.msg); return false; }
+
+                const vProb = validarTexto(document.getElementById('problema').value, 15, 'Problema Logístico');
+                if (!vProb.valido) { mostrarAlerta(vProb.msg); return false; }
+                const vObj = validarTexto(document.getElementById('objetivo').value, 15, 'Objetivo do Projeto');
+                if (!vObj.valido) { mostrarAlerta(vObj.msg); return false; }
+
+                pontosPorPasso[1] = 25;
+            } else if (currentStep === 2) {
+                const vI1 = validarTexto(document.getElementById('item1').value, 8, 'Item 1 do Backlog');
+                if (!vI1.valido) { mostrarAlerta(vI1.msg); return false; }
+                const vI2 = validarTexto(document.getElementById('item2').value, 8, 'Item 2 do Backlog');
+                if (!vI2.valido) { mostrarAlerta(vI2.msg); return false; }
+                const vI3 = validarTexto(document.getElementById('item3').value, 8, 'Item 3 do Backlog');
+                if (!vI3.valido) { mostrarAlerta(vI3.msg); return false; }
+
+                const vMeta = validarTexto(document.getElementById('meta-sprint').value, 15, 'Meta da Sprint');
+                if (!vMeta.valido) { mostrarAlerta(vMeta.msg); return false; }
+
+                pontosPorPasso[2] = 25;
+            } else if (currentStep === 3) {
+                const po = document.getElementById('papel-po').value;
+                const sm = document.getElementById('papel-sm').value;
+                const devs = document.getElementById('papel-devs').value;
+
+                if (!po) { mostrarAlerta('Por favor, selecione quem será o Product Owner (PO).'); return false; }
+                if (!sm) { mostrarAlerta('Por favor, selecione quem será o Scrum Master (SM).'); return false; }
+                if (!devs) { mostrarAlerta('Por favor, selecione os Developers (Devs).'); return false; }
+
+                const vTar = validarTexto(document.getElementById('tarefas-detalhes').value, 15, 'Divisão de Tarefas');
+                if (!vTar.valido) { mostrarAlerta(vTar.msg); return false; }
+
+                pontosPorPasso[3] = 25;
+            } else if (currentStep === 4) {
+                const vRev = validarTexto(document.getElementById('review-resp').value, 12, 'Review (Entrega)');
+                if (!vRev.valido) { mostrarAlerta(vRev.msg); return false; }
+                const vPos = validarTexto(document.getElementById('retro-pos').value, 12, 'Retrospective - Ponto Positivo');
+                if (!vPos.valido) { mostrarAlerta(vPos.msg); return false; }
+                const vMelh = validarTexto(document.getElementById('retro-melhoria').value, 12, 'Retrospective - Ponto de Melhoria');
+                if (!vMelh.valido) { mostrarAlerta(vMelh.msg); return false; }
+
+                pontosPorPasso[4] = 25;
+            }
+
+            atualizarExibicaoScore();
+            return true;
+        }
+
+        function mudarPasso(direcao) {
+            if (direcao === 1) {
+                if (!validarPassoAtual()) return;
+                currentStep++;
+            } else if (direcao === -1) {
+                if (currentStep > 1) {
+                    currentStep--;
+                }
+            }
+            atualizarUI();
+        }
+
+        function gerarRelatorio() {
+            if (!validarPassoAtual()) return;
+
+            const alunos = `${document.getElementById('aluno1').value}, ${document.getElementById('aluno2').value}, ${document.getElementById('aluno3').value}`;
+            const empresa = document.getElementById('empresa').value;
+            const setor = document.getElementById('setor').value;
+            const problema = document.getElementById('problema').value;
+            const objetivo = document.getElementById('objetivo').value;
+            const item1 = document.getElementById('item1').value;
+            const item2 = document.getElementById('item2').value;
+            const item3 = document.getElementById('item3').value;
+            const meta = document.getElementById('meta-sprint').value;
+            const po = document.getElementById('papel-po').value;
+            const sm = document.getElementById('papel-sm').value;
+            const devs = document.getElementById('papel-devs').value;
+            const tarefas = document.getElementById('tarefas-detalhes').value;
+            const review = document.getElementById('review-resp').value;
+            const pos = document.getElementById('retro-pos').value;
+            const melhoria = document.getElementById('retro-melhoria').value;
+
+            const notaFinal = calcularNotaTotal();
+
+            const htmlReport = `
+                <div class="space-y-3">
+                    <p><strong>👥 Integrantes da Equipe:</strong> ${alunos}</p>
+                    <p><strong>🏢 Empresa / Setor:</strong> ${empresa} (${setor})</p>
+                    <hr class="border-slate-200">
+                    <p><strong>🎯 Problema:</strong> ${problema}</p>
+                    <p><strong>🎯 Objetivo:</strong> ${objetivo}</p>
+                    <hr class="border-slate-200">
+                    <p><strong>📋 Product Backlog (Prioridades):</strong><br>1. ${item1}<br>2. ${item2}<br>3. ${item3}</p>
+                    <p><strong>🏃 Meta da Sprint:</strong> ${meta}</p>
+                    <hr class="border-slate-200">
+                    <p><strong>👥 Papéis Ágeis:</strong><br>• Product Owner (PO): ${po}<br>• Scrum Master (SM): ${sm}<br>• Developers: ${devs}</p>
+                    <p><strong>📋 Divisão de Tarefas:</strong> ${tarefas}</p>
+                    <hr class="border-slate-200">
+                    <p><strong>🗣️ Review (Entrega):</strong> ${review}</p>
+                    <p><strong>👍 Retrospective (Positivo):</strong> ${pos}</p>
+                    <p><strong>💡 Retrospective (Melhoria):</strong> ${melhoria}</p>
+                    <div class="pt-2 text-xs text-slate-500 font-medium">Pontuação Total Alcançada: ${notaFinal} pts (100% Concluído)</div>
+                </div>
+            `;
+
+            document.getElementById('report-preview-box').innerHTML = htmlReport;
+            currentStep = 5;
+            atualizarUI();
+        }
+
+        function copiarRelatorio() {
+            const previewText = document.getElementById('report-preview-box').innerText;
+            const textArea = document.createElement("textarea");
+            textArea.value = previewText;
+            document.body.appendChild(textArea);
+            textArea.select();
+            try {
+                document.execCommand('copy');
+                alert("Relatório copiado com sucesso! Você já pode colar no chat ou documento.");
+            } catch (err) {
+                alert("Erro ao copiar. Selecione o texto manualmente.");
+            }
+            document.body.removeChild(textArea);
+        }
+
+        window.onload = function() {
+            atualizarUI();
+        };
+    </script>
+</body>
+</html>
